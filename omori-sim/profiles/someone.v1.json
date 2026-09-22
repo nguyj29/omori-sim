@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "profileId": "someone",
-  "revision": 1,
+  "revision": 2,
   "status": "baseline_pending_calibration",
   "predictionTarget": "next attempt with current knowledge",
   "baselineContext": {
@@ -19,12 +19,11 @@
     "aubreyHeadbuttEquipped": true,
     "aubreyProvisionalLoadout": [
       "Pep Talk",
-      "Guard",
-      "Twirl",
-      "Headbutt"
+      "Headbutt",
+      "Counter"
     ],
-    "replacedSkill": "Counter",
-    "note": "Provisional custom-profile loadout so the stated Headbutt preference can be represented; revise when the actual loadout is observed."
+    "replacedSkill": "Twirl",
+    "note": "Provisional custom-profile loadout. Twirl is removed: Classes.json teaches it at level 10 and the preset Aubrey is level 8. Headbutt is granted by a story event rather than a level-up. Revise when the actual loadout is observed."
   },
   "dimensions": {
     "damageUrgency": {
@@ -98,7 +97,8 @@
       "confidence": "medium",
       "evidence": [
         "Usually remembers queued actions but occasionally makes coordination errors.",
-        "Does not account for speed order."
+        "Does not account for speed order.",
+        "Modeled as a 10% per-friend chance each turn of ignoring heals or snacks already queued by teammates."
       ]
     },
     "followUpPreference": {
@@ -180,12 +180,6 @@
       "strength": "strong"
     },
     {
-      "id": "boss-healing",
-      "when": "fighting a boss and a living friend is below about 60% Heart",
-      "preference": "heal frequently, especially with Hero's Cook; consider snacks below about 35% Heart",
-      "strength": "strong"
-    },
-    {
       "id": "boss-energy-reserve",
       "when": "fighting a boss and shared Energy is below 10",
       "preference": "usually skip ordinary follow-ups to save for Omori's Release Energy",
@@ -214,6 +208,31 @@
       "when": "Kel can use a follow-up",
       "preference": "Pass to Aubrey",
       "strength": "strong"
+    },
+    {
+      "id": "boss-healing",
+      "when": "fighting a boss and a living friend is below about 60% Heart",
+      "preference": "Hero uses Cook on the lowest friend who is not already being healed this turn",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-snacks",
+      "when": "fighting a boss and a living friend is below about 35% Heart",
+      "preference": "a free friend uses a snack on them, one snack per target unless a coordination slip occurs",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-headbutt-threshold",
+      "when": "fighting a boss",
+      "preference": "Headbutt only while Aubrey is above about 55% Heart",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-release-intent",
+      "when": "fighting a boss, Energy is 10 and all four friends are alive",
+      "preference": "Omori chooses a normal Attack instead of Stab so Release Energy can be offered (modeled at 80%)",
+      "strength": "assumed",
+      "confidence": "low"
     }
   ],
   "unknownsForCalibration": [
@@ -223,7 +242,9 @@
     "What target receives Life Jam during a multi-Toast crisis",
     "Whether Life Jam urgency changes during a boss",
     "Buff and debuff use",
-    "How behavior changes after losing to the same boss"
+    "How behavior changes after losing to the same boss",
+    "Whether Omori deliberately uses a normal Attack instead of Stab when Energy is full",
+    "Whether Headbutt recoil before Download Window's turn-3 Crash is avoided (below 81% Heart, Crash makes Aubrey Toast)"
   ],
   "bossOverlays": {}
 }

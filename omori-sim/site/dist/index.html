@@ -113,11 +113,11 @@
         <section class="panel"><h2>Screenshot party preset</h2><div id="partyTable"></div><p class="footnote">Current Heart, Juice, levels, weapons, and charms transcribed from the supplied screenshots.</p></section>
         <section class="panel"><h2>Encounter records</h2><div id="enemyTable"></div></section>
         <section class="panel sources"><h2>Primary references</h2><a href="https://github.com/Escartem/OmoriSource" target="_blank" rel="noreferrer"><span>Escartem / OmoriSource</span><small>Enemies.json, Skills.json, Classes.json</small></a><a href="https://omori.wiki/Download_Window" target="_blank" rel="noreferrer"><span>OMORI Wiki · Download Window</span><small>Behavior and Crash timing</small></a><a href="https://omori.wiki/Battle_system" target="_blank" rel="noreferrer"><span>OMORI Wiki · Battle system</span><small>Energy, follow-ups, emotions</small></a><a href="https://omori.wiki/Junkyard" target="_blank" rel="noreferrer"><span>OMORI Wiki · Junkyard</span><small>Available items and equipment</small></a></section>
-        <section class="panel"><h2>Known limits</h2><ul><li>Damage variance, speed ties, and action choice are stochastic.</li><li>Levels 1–50 use exact class stat tables from the source data.</li><li>The standard inventory is an explicit scenario preset, not a claim about every save file.</li><li>“Best found” is a strong heuristic policy, not a proof of optimal play.</li><li>Custom calibration is local and descriptive; image extraction does not call a model yet.</li></ul></section>
+        <section class="panel"><h2>Known limits</h2><ul><li>Damage variance, criticals, and action choice are stochastic; action order follows Agility with no random roll.</li><li>Commands are committed at the start of each turn; follow-ups are chosen when the Attack lands.</li><li>Guard, emotions, Aubrey/Hero follow-ups and Omori’s “did not succumb” are not modeled yet.</li><li>Space Ex-Boyfriend and Space Bunny move choice is still provisional.</li><li>Levels 1–50 use exact class stat tables from the source data.</li><li>The standard inventory is an explicit scenario preset, not a claim about every save file.</li><li>“Best found” is a strong heuristic policy, not a proof of optimal play.</li><li>Custom calibration is local and descriptive; image extraction does not call a model yet.</li></ul></section>
       </div>
     </section>
   </main>
-  <footer><span>Unofficial fan-made analysis tool.</span><span id="build">Ruleset 0.1 · Sep 2026</span></footer>
+  <footer><span>Unofficial fan-made analysis tool.</span><span id="build">Ruleset 0.2 · Sep 2026</span></footer>
   <script type="module" src="app.js"></script>
 </body>
 </html>

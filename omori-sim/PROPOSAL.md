@@ -89,6 +89,21 @@ The boss’s listed formulas include ordinary attack `2 × Attack + 5 − Defens
 7. **Emotion/resource interactions.** Verify sadness’s Juice absorption at low/zero Juice, emotion locks, healing interactions, buff duration, and state clearing on revival.
 8. **Version scope.** Pin a documented PC English ruleset initially. Record conflicting or version-dependent rules rather than mixing platforms.
 
+### Resolved from source (ruleset 0.2)
+
+Checked against `Escartem/OmoriSource` (`data/*.json`, `js/plugins.js`, `rpg_objects.js`, `YEP_DamageCore`, `YEP_X_CriticalControl`, `YIN_OmoriFixes`, `Omori Battle System`):
+
+- **Numerical pipeline (gate 3).** Formula result floored at 0 → critical `×1.5` then `+1.5` → variance `v + randInt(amp+1) + randInt(amp+1) − amp` with `amp = floor(|v| × 20%)` (triangular, not uniform) → guard → `Math.round`. Critical chance is `Luck × 1%`; Stab adds `<Critical Rate: 100%>`. Zero damage is possible; there is no minimum of 1.
+- **Turn structure.** All commands are entered during the input phase, then resolved in descending action speed = Agility + skill speed (no random roll in this build: `Action Speed: agi`). Ties keep party-then-troop order. The engine now commits every friend's command before resolution and uses RPG Maker smooth targeting when a chosen target has fallen. Follow-ups are still chosen when the Attack resolves, which matches the in-game follow-up prompt.
+- **Energy.** Starts at 3, capped at 10, and gains 1 whenever a friend takes HP damage greater than 0 from a hit. Headbutt recoil does not count.
+- **Release Energy.** Needs Aubrey, Kel and Hero alive. The tier is picked by story switches 994/1021; tier 1 is 300 fixed damage to every enemy. The tier-1 assumption for Download Window is not source-confirmed. State 110 gives ×1.25 ATK/DEF/SPD/LUCK, rounded like any parameter, lasts until the battle ends, and does not stack.
+- **Tier-1 follow-ups.** Trip `(atk + luk) − def` plus Speed Down. Pass to Aubrey `Aubrey.atk + Kel.atk − def`, certain hit, on a random enemy. The old generic Aubrey/Hero damage follow-ups had no source and were removed.
+- **Download Window.** The Crash setup adds state 496 (+1000% accuracy) to the user, so Crash cannot miss despite the enemy's 95% Hit trait. It deals `round(0.8 × max Heart)` with 0 variance and no critical. A friend at or below 80% Heart when Crash lands becomes Toast. Headbutt recoil (`floor(20% max)`) therefore makes Aubrey Toast on the turn-3 Crash.
+- **Items.** Candy +30 Heart, Apple Juice +25 Juice (was 20), Life Jam revives at 50%.
+- **Skill legality.** Aubrey learns Twirl at level 10 and Counter at 6. Headbutt comes from a story event, not a level-up.
+
+Still open: Omori's "did not succumb" (no implementation found in the plugins yet), Guard use, emotions, Aubrey/Hero follow-ups, enemy action-selection for Space Ex-Boyfriend and Space Bunny, and Boss Rush Download Window (#1025: 6000 HP, 65 DEF) as a separate encounter.
+
 Each rule stores its source URL, retrieval date, confidence, version, and unresolved questions. Results using unresolved high-impact rules must be labeled provisional. Monte Carlo confidence intervals cannot compensate for incorrect mechanics.
 
 ## 5. Stochastic player decisions
