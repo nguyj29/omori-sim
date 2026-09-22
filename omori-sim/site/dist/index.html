@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#10131a">
+  <title>OMORI Battle Lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='13' fill='%2310131a'/%3E%3Cpath d='M18 20h28v24H18z' fill='none' stroke='%23d9ff72' stroke-width='4'/%3E%3Cpath d='M25 27h14M25 35h8' stroke='%23d9ff72' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div><span class="mark">OBL</span><strong>OMORI Battle Lab</strong><span class="beta">prototype</span></div>
+    <nav aria-label="Sections">
+      <button class="nav active" data-view="simulate">Simulate</button>
+      <button class="nav" data-view="bet">Bet sizing</button>
+      <button class="nav" data-view="calibrate">Calibrate</button>
+      <button class="nav" data-view="data">Data & sources</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="simulate" class="view active">
+      <div class="intro">
+        <div><p class="eyebrow">STOCHASTIC BATTLE MODEL</p><h1>How likely is this party to win?</h1></div>
+        <p>Four decision policies play the same encounter repeatedly. Results use the game’s source data where available and expose every approximation.</p>
+      </div>
+
+      <div class="sim-grid">
+        <aside class="panel controls">
+          <label>Encounter<select id="encounter"><option value="download" selected>Download Window</option><option value="spaceboy">Space Ex-Boyfriend · queued</option><option value="bunnies">2× Space Bunny · queued</option></select></label>
+          <div class="two">
+            <label>Trials<select id="trials"><option value="1000">1,000</option><option value="5000" selected>5,000</option><option value="10000">10,000</option></select></label>
+            <label>Seed<input id="seed" type="number" value="4187" min="1" step="1"></label>
+          </div>
+          <div><span class="field-title">Party levels</span><div id="partyLevels" class="party-levels"></div></div>
+          <label class="importer" id="importer">Paste or upload stat screens<input id="statImage" type="file" accept="image/*" multiple><span>Ctrl/Cmd+V anywhere, or choose multiple images</span><div id="statPreviews" class="stat-previews" aria-label="Stat screen previews"></div></label>
+          <label>Inventory<select id="inventory"><option value="standard">Standard Otherworld</option><option value="lean">Few snacks</option><option value="none">No consumables</option></select></label>
+          <label class="check"><input id="headbutt" type="checkbox" checked><span>Aubrey has Headbutt equipped</span></label>
+          <button id="run" class="primary">Run 5,000 battles</button>
+          <p id="status" class="status">Ready. Same seed and setup are used for all policies.</p>
+        </aside>
+
+        <section aria-label="Simulation results">
+          <div class="result-head"><div><p class="eyebrow">RESULTS</p><h2 id="resultTitle">Download Window</h2></div><div class="legend"><i></i>95% interval</div></div>
+          <div id="results" class="results"></div>
+          <div class="panel detail">
+            <div><span>Ruleset</span><strong id="ruleset">Source-backed core + documented approximations</strong></div>
+            <div><span>Standard inventory</span><strong id="inventoryText">6 Candy · 3 Apple Juice · 2 Life Jam</strong></div>
+            <div><span>Custom profile</span><strong>Someone · baseline v1</strong></div>
+          </div>
+          <details class="panel assumptions"><summary>What is modeled in this prototype?</summary><ul id="assumptions"></ul></details>
+          <section class="panel scenario">
+            <div class="scenario-head"><div><p class="eyebrow">SINGLE BATTLE</p><h2>Roll an action sequence</h2></div><div class="scenario-controls"><select id="scenarioPolicy" aria-label="Scenario policy"><option value="custom">Someone</option><option value="suboptimal">Suboptimal</option><option value="decent">Decent</option><option value="best">Best found</option></select><input id="scenarioSeed" type="number" min="1" value="12439" aria-label="Scenario seed"><button id="rollScenario">Roll</button></div></div>
+            <div id="scenarioState" class="scenario-state"><p>Roll a seeded battle, then move through every action.</p></div>
+            <div class="scenario-foot"><span id="scenarioProgress">No battle rolled</span><button id="nextAction" disabled>Next turn</button></div>
+          </section>
+        </section>
+      </div>
+    </section>
+
+    <section id="bet" class="view">
+      <div class="intro"><div><p class="eyebrow">PARIMUTUEL KELLY</p><h1>Size the edge without guessing</h1></div><p>The stake changes the pool odds, so the calculator optimizes expected logarithmic growth after accounting for your own bet.</p></div>
+      <div class="bet-layout">
+        <section class="panel bet-inputs">
+          <div class="pool-sides">
+            <div class="pool-side red-side"><span>RED · Boss wins</span><strong id="redPool">5,000 in pool</strong><small id="redOdds">2.00× return</small></div>
+            <div class="pool-side blue-side"><span>BLUE · Party wins</span><strong id="bluePool">5,000 in pool</strong><small id="blueOdds">2.00× return</small></div>
+          </div>
+          <div class="bet-fields">
+            <label class="slider-field">Total pool size <output id="poolSizeOut">10,000</output><input id="poolSize" type="range" min="100" max="50000" step="100" value="10000"></label>
+            <label class="slider-field">Current Blue implied probability <output id="marketOddsOut">50.0%</output><input id="marketOdds" type="range" min="1" max="99" step="0.1" value="50"></label>
+            <label>Current points<input id="bankroll" type="number" min="1" value="1000"></label>
+            <label>Kelly fraction<select id="kellyFraction"><option value="0.25">¼ Kelly</option><option value="0.5" selected>½ Kelly</option><option value="0.75">¾ Kelly</option><option value="1">Full Kelly</option></select></label>
+          </div>
+          <label class="belief-slider">Our Blue probability <output id="beliefOut">50.0%</output><input id="belief" type="range" min="0.1" max="99.9" step="0.1" value="50"><div class="probability-ticks"><button id="pessTick" type="button"><i></i><span>Pessimistic</span><strong>40%</strong></button><button id="customTick" type="button"><i></i><span>Custom</span><strong>50%</strong></button><button id="optimTick" type="button"><i></i><span>Optimistic</span><strong>60%</strong></button></div><span class="range-value">Red probability is <output id="redBelief">50.0%</output></span></label>
+          <div class="pool-summary"><span>Total pool<strong id="totalPool">10,000</strong></span><span>Market Blue probability<strong id="marketBlue">50.0%</strong></span><span>Our edge<strong id="beliefEdge">0.0 pts</strong></span></div>
+        </section>
+        <section class="panel recommendation">
+          <p class="eyebrow">RECOMMENDATION</p><div id="betSide" class="bet-side-label">No bet</div><div class="stake" id="betStake">0 points</div><p id="betExplanation">There is no positive logarithmic-growth edge at these probabilities.</p>
+          <div class="risk-return"><div><span>Risk</span><strong id="riskLabel">None</strong></div><i><b id="riskBar"></b></i><div><span>Expected return</span><strong id="expectedReturn">0 points</strong></div></div>
+          <div class="outcomes"><div><span>If selected side wins</span><strong id="winBankroll">1,000</strong></div><div><span>If it loses</span><strong id="loseBankroll">1,000</strong></div><div><span>Expected bankroll</span><strong id="expectedBankroll">1,000</strong></div><div><span>Full-Kelly stake</span><strong id="fullKelly">0</strong></div><div><span>EV per point risked</span><strong id="rewardRisk">—</strong></div></div>
+          <p class="footnote">No house take is assumed. “Return” includes the original stake; expected return reports net point profit. Fractional Kelly scales the numerically optimized full-Kelly stake.</p>
+        </section>
+      </div>
+      <section class="panel result-reference"><div><p class="eyebrow">SIMULATION REFERENCE</p><h2>Use a battle result as our Blue probability</h2></div><div id="betReferences"></div></section>
+    </section>
+
+    <section id="calibrate" class="view">
+      <div class="intro"><div><p class="eyebrow">CUSTOM POLICY</p><h1>Someone · baseline v1</h1></div><p>Adjust stable habits here. Later, short fight choices can update these values while keeping encounter knowledge separate.</p></div>
+      <div class="cal-grid">
+        <section class="panel dimensions" id="dimensions">
+          <p class="eyebrow">PROFILE INTERPRETER</p><h2>Describe how they play</h2>
+          <textarea id="profilePrompt" rows="10" placeholder="Example: They focus one target, save healing until someone is nearly Toast, and sometimes use Headbutt."></textarea>
+          <div class="model-row"><label>Model<select id="profileModel"><option value="gpt-5.6-luna">GPT-5.6 Luna</option></select></label><label>Reasoning<select id="profileEffort"><option value="low">Low</option><option value="medium">Medium</option></select></label><button id="interpretProfile" class="primary">Draft profile changes</button></div>
+          <p class="status" id="profileStatus">Descriptions become a reviewable profile patch. No change is applied automatically.</p>
+          <div id="profilePatch" class="profile-patch"><span>No draft yet.</span></div>
+        </section>
+        <section class="panel probe">
+          <p class="eyebrow">CHOICE PROBE</p><h2>What would they do?</h2>
+          <div class="state"><span>Space Ex-Boyfriend · turn 4</span><strong>Omori 62% HP · Aubrey 78% · Kel 44% · Hero 71%</strong><span>3 Energy · Kel low on Juice · no one Toast</span></div>
+          <p class="prediction">Prediction: <strong id="prediction">Kel attacks the focused target</strong><br><small id="predictionWhy">Juice is ignored, healing is delayed, and familiar damage actions dominate.</small></p>
+          <p class="muted">Record an observed choice to compare it with the prediction. This prototype stores calibration only in this browser.</p>
+          <div class="actuals" id="actuals"></div>
+          <div id="calibrationNote" class="status">No observation recorded.</div>
+        </section>
+      </div>
+    </section>
+
+    <section id="data" class="view">
+      <div class="intro"><div><p class="eyebrow">PROVENANCE</p><h1>Rules you can inspect</h1></div><p>GitHub supplies exact RPG Maker records; the wiki supplies readable explanations and cross-checks. Approximations stay visible.</p></div>
+      <div class="data-grid">
+        <section class="panel"><h2>Screenshot party preset</h2><div id="partyTable"></div><p class="footnote">Current Heart, Juice, levels, weapons, and charms transcribed from the supplied screenshots.</p></section>
+        <section class="panel"><h2>Encounter records</h2><div id="enemyTable"></div></section>
+        <section class="panel sources"><h2>Primary references</h2><a href="https://github.com/Escartem/OmoriSource" target="_blank" rel="noreferrer"><span>Escartem / OmoriSource</span><small>Enemies.json, Skills.json, Classes.json</small></a><a href="https://omori.wiki/Download_Window" target="_blank" rel="noreferrer"><span>OMORI Wiki · Download Window</span><small>Behavior and Crash timing</small></a><a href="https://omori.wiki/Battle_system" target="_blank" rel="noreferrer"><span>OMORI Wiki · Battle system</span><small>Energy, follow-ups, emotions</small></a><a href="https://omori.wiki/Junkyard" target="_blank" rel="noreferrer"><span>OMORI Wiki · Junkyard</span><small>Available items and equipment</small></a></section>
+        <section class="panel"><h2>Known limits</h2><ul><li>Damage variance, speed ties, and action choice are stochastic.</li><li>Levels 1–50 use exact class stat tables from the source data.</li><li>The standard inventory is an explicit scenario preset, not a claim about every save file.</li><li>“Best found” is a strong heuristic policy, not a proof of optimal play.</li><li>Custom calibration is local and descriptive; image extraction does not call a model yet.</li></ul></section>
+      </div>
+    </section>
+  </main>
+  <footer><span>Unofficial fan-made analysis tool.</span><span id="build">Ruleset 0.1 · Sep 2026</span></footer>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

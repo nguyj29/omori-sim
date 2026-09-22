@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "profileId": "someone",
+  "revision": 1,
+  "status": "baseline_pending_calibration",
+  "predictionTarget": "next attempt with current knowledge",
+  "baselineContext": {
+    "rpgFamiliarity": "some",
+    "emotionEffectKnowledge": "understands basic effects",
+    "emotionMatchupKnowledge": "does not know which emotion beats which",
+    "advancedEmotionKnowledge": "does not understand higher emotion tiers",
+    "speedOrderKnowledge": "does not understand or monitor turn order",
+    "juiceAwareness": "usually ignored",
+    "preparationStyle": "enters immediately",
+    "bossHistory": "unspecified"
+  },
+  "scenarioAssumptions": {
+    "aubreyHeadbuttUnlocked": true,
+    "aubreyHeadbuttEquipped": true,
+    "aubreyProvisionalLoadout": [
+      "Pep Talk",
+      "Guard",
+      "Twirl",
+      "Headbutt"
+    ],
+    "replacedSkill": "Counter",
+    "note": "Provisional custom-profile loadout so the stated Headbutt preference can be represented; revise when the actual loadout is observed."
+  },
+  "dimensions": {
+    "damageUrgency": {
+      "estimate": "high",
+      "confidence": "high",
+      "evidence": [
+        "Races the enemy when under pressure.",
+        "Focuses all party members on one target."
+      ]
+    },
+    "healingThreshold": {
+      "estimate": "critical_or_toast",
+      "confidence": "high",
+      "evidence": [
+        "Usually heals only near critical Heart or after Toast."
+      ]
+    },
+    "revivalPriority": {
+      "estimate": "low_until_multi_toast_crisis",
+      "confidence": "high",
+      "evidence": [
+        "Rarely uses Life Jam.",
+        "Life Jam is used only in a crisis where more than one party member is Toast."
+      ]
+    },
+    "juiceManagement": {
+      "estimate": "ignored",
+      "confidence": "high",
+      "evidence": [
+        "Does not currently pay attention to Juice."
+      ]
+    },
+    "itemConservation": {
+      "estimate": "high",
+      "confidence": "high",
+      "evidence": [
+        "Likes to hoard items.",
+        "Uses items only when party stats become low."
+      ]
+    },
+    "emotionManagement": {
+      "estimate": "usually_ignored",
+      "confidence": "high",
+      "evidence": [
+        "Understands individual basic emotion effects but ignores emotion management.",
+        "Does not know the emotion matchup triangle or advanced tiers."
+      ]
+    },
+    "buffDebuffPreference": {
+      "estimate": "unknown",
+      "confidence": "low",
+      "evidence": []
+    },
+    "skillPreference": {
+      "estimate": "aubrey_headbutt_occasional",
+      "confidence": "medium",
+      "evidence": [
+        "Uses Headbutt with Aubrey sometimes, but it is not her default action.",
+        "Whether other characters favor skills over basic attacks is unknown."
+      ]
+    },
+    "targetPreference": {
+      "estimate": "focus_one_target",
+      "confidence": "high",
+      "evidence": [
+        "Usually attacks one enemy with the whole party."
+      ]
+    },
+    "partyCoordination": {
+      "estimate": "usually_coordinates_with_small_error_rate",
+      "confidence": "medium",
+      "evidence": [
+        "Usually remembers queued actions but occasionally makes coordination errors.",
+        "Does not account for speed order."
+      ]
+    },
+    "followUpPreference": {
+      "estimate": "use_frequently",
+      "confidence": "high",
+      "evidence": [
+        "Tends to use available follow-ups rather than skip them.",
+        "Uses Omori's Trip and Kel's Pass to Aubrey.",
+        "Other follow-up preferences are unknown."
+      ]
+    },
+    "energyReserve": {
+      "estimate": "low",
+      "confidence": "high",
+      "evidence": [
+        "Does not tend to save shared energy."
+      ]
+    },
+    "riskTolerance": {
+      "estimate": "aggressive_race",
+      "confidence": "high",
+      "evidence": [
+        "Races the enemy rather than switching to safe recovery."
+      ]
+    },
+    "habitPersistence": {
+      "estimate": "repeats_familiar_actions",
+      "confidence": "high",
+      "evidence": [
+        "Tends to repeat familiar actions."
+      ]
+    },
+    "characterRoles": {
+      "estimate": "approximately_standard",
+      "confidence": "low",
+      "evidence": [
+        "Specific roles have not been observed."
+      ]
+    },
+    "learningBetweenAttempts": {
+      "estimate": "unknown",
+      "confidence": "low",
+      "evidence": []
+    }
+  },
+  "conditionalRules": [
+    {
+      "id": "focus-fire",
+      "when": "multiple enemies are alive",
+      "preference": "have all available attackers focus one target",
+      "strength": "strong"
+    },
+    {
+      "id": "aubrey-headbutt",
+      "when": "Headbutt is equipped, Aubrey is alive, and she can afford it",
+      "preference": "give Headbutt a moderate choice weight when Aubrey has enough Juice and enough HP to tolerate recoil",
+      "strength": "strong",
+      "exceptions": [
+        "an observed crisis triggers healing or item use",
+        "Aubrey cannot pay the Juice cost"
+      ]
+    },
+    {
+      "id": "life-jam-crisis",
+      "when": "at least two party members are Toast and Life Jam is available",
+      "preference": "consider using Life Jam",
+      "strength": "strong"
+    },
+    {
+      "id": "single-toast-life-jam-hoard",
+      "when": "exactly one party member is Toast",
+      "preference": "usually preserve Life Jam",
+      "strength": "strong"
+    },
+    {
+      "id": "follow-up-spend",
+      "when": "a familiar legal follow-up is available and energy is sufficient",
+      "preference": "use the follow-up instead of saving energy",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-healing",
+      "when": "fighting a boss and a living friend is below about 60% Heart",
+      "preference": "heal frequently, especially with Hero's Cook; consider snacks below about 35% Heart",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-energy-reserve",
+      "when": "fighting a boss and shared Energy is below 10",
+      "preference": "usually skip ordinary follow-ups to save for Omori's Release Energy",
+      "strength": "strong"
+    },
+    {
+      "id": "boss-release-energy",
+      "when": "fighting a boss, Energy is 10, all four friends are alive, and Omori can follow a normal Attack",
+      "preference": "Release Energy",
+      "strength": "strong"
+    },
+    {
+      "id": "omori-skill",
+      "when": "Omori has Stab equipped and at least 13 Juice",
+      "preference": "Stab",
+      "strength": "very strong"
+    },
+    {
+      "id": "omori-follow-up",
+      "when": "Omori can use a follow-up",
+      "preference": "Trip",
+      "strength": "strong"
+    },
+    {
+      "id": "kel-follow-up",
+      "when": "Kel can use a follow-up",
+      "preference": "Pass to Aubrey",
+      "strength": "strong"
+    }
+  ],
+  "unknownsForCalibration": [
+    "Whether each character normally uses basic attacks or skills",
+    "Specific character roles beyond Aubrey's occasional Headbutt use",
+    "Hero and Aubrey follow-up preferences",
+    "What target receives Life Jam during a multi-Toast crisis",
+    "Whether Life Jam urgency changes during a boss",
+    "Buff and debuff use",
+    "How behavior changes after losing to the same boss"
+  ],
+  "bossOverlays": {}
+}
