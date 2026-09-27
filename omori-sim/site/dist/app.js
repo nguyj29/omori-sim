@@ -29,7 +29,7 @@ function hover(node,lines){node.setAttribute('tabindex','0');node.addEventListen
 
 /* ---------------- encounter + party ---------------- */
 function renderEncounters(){
-  $('#encounters').replaceChildren(...Object.entries(ENCOUNTERS).map(([id,e])=>{
+  $('#encounters').replaceChildren(...['download','spaceboy','bunnies'].map(id=>[id,ENCOUNTERS[id]]).map(([id,e])=>{
     const b=el('button',{role:'radio','aria-checked':String(id===state.encounter)},e.name,el('small',{},ENC_TAGS[id]));
     b.onclick=()=>{state.encounter=id;renderEncounters();renderRules();markStale()};return b}));
 }
@@ -53,7 +53,8 @@ function renderParty(){
       el('div',{class:'gear'},`${p.weapon} · ${p.charm}`));
   }));
 }
-function markStale(){if(state.results)$('#status').textContent='Setup changed — press Simulate to update these numbers.'}
+function markStale(){if(!state.results)return;document.body.classList.add('is-stale');for(const id of['#verdict','.ruler-wrap','#policyTable','.why','#rec','#presets'])$(id).classList.add('stale');$('#status').textContent='Setup changed since this run.'}
+function clearStale(){document.body.classList.remove('is-stale');$$('.stale').forEach(x=>x.classList.remove('stale'))}
 
 /* ---------------- simulation ---------------- */
 function makeWorker(){return new Worker(new URL('./worker.js',import.meta.url),{type:'module'})}
@@ -65,6 +66,7 @@ async function run(){
   catch{await new Promise(r=>setTimeout(r,20));results=runAll(s,n,seed)}
   state.results={list:results,encounter:s.encounter};$('#run').disabled=false;
   $('#status').textContent=`${n.toLocaleString()} battles per policy · seed ${seed} · ${Math.round(performance.now()-t0)} ms. The same seed reproduces these numbers.`;
+  clearStale();$('#belief').value=(Math.max(.001,Math.min(.999,byKey('custom').rate))*100).toFixed(1);
   renderOdds();renderPresets();updateKelly();
 }
 const byKey=k=>state.results?.list.find(r=>r.key===k);
@@ -74,20 +76,21 @@ function renderOdds(){
   $('#verdict').replaceChildren(
     el('div',{class:'who'},el('span',{},'Someone'),el('small',{},`win chance vs ${enc}`)),
     el('div',{class:'big'},pct(me.rate)),
+    el('div',{class:'who'},el('span',{class:'call',id:'verdictCall'},''),el('small',{id:'verdictCallSub'},'')),
     el('p',{class:'side'},`Best found play wins ${pct(best.rate)}. The gap is how much the profile's habits cost in this fight.`));
   drawRuler();
-  const t=$('#policyTable');t.replaceChildren(el('thead',{},el('tr',{},...['Policy','Win','95% interval','Median turns','Friends standing'].map(h=>el('th',{},h)))),
-    el('tbody',{},...POLICIES.map(k=>{const r=byKey(k);return el('tr',{class:k==='custom'?'me':''},el('td',{},r.name),el('td',{},pct(r.rate)),el('td',{},`${pct(r.ci[0])}–${pct(r.ci[1])}`),el('td',{},String(r.medianTurns)),el('td',{},r.avgSurvivors.toFixed(1)))})));
+  const t=$('#policyTable');t.replaceChildren(el('thead',{},el('tr',{},...['Policy','Win','95% interval','Median turns','Alive at end'].map((h,i)=>el('th',{class:i===2?'ci':null},h)))),
+    el('tbody',{},...POLICIES.map(k=>{const r=byKey(k);return el('tr',{class:k==='custom'?'me':''},el('td',{},r.name),el('td',{},pct(r.rate)),el('td',{class:'ci'},`${pct(r.ci[0])}–${pct(r.ci[1])}`),el('td',{},String(r.medianTurns)),el('td',{},r.avgSurvivors.toFixed(1)))})));
   $('#whyPolicy').replaceChildren(...POLICIES.map(k=>{const b=el('button',{role:'radio','aria-checked':String(k===state.why)},POLICY_NAMES[k]);b.onclick=()=>{state.why=k;renderOdds()};return b}));
   drawEnds();renderToasts();
 }
 
 // One horizontal probability scale: a row per policy (dot + 95% whisker), plus the market's Blue line.
 function drawRuler(){
-  const svg=$('#ruler');if(!state.results)return;const W=svg.clientWidth||600,H=132,L=10,R=10,top=22,row=24;
+  const svg=$('#ruler');if(!state.results)return;const W=svg.clientWidth||600,H=124,L=14,R=14,top=22,row=20;
   const x=v=>L+v*(W-L-R);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren();
   const axisY=top+row*4+4;
-  for(const v of[0,.25,.5,.75,1]){svg.append(el('svg:line',{class:'grid',x1:x(v),x2:x(v),y1:top-6,y2:axisY}),el('svg:text',{class:'ax',x:x(v),y:axisY+16,'text-anchor':v===0?'start':v===1?'end':'middle'},`${v*100}%`))}
+  for(const v of[0,.25,.5,.75,1]){svg.append(el('svg:line',{class:'grid',x1:x(v),x2:x(v),y1:top-6,y2:axisY}),el('svg:text',{class:'ax',x:x(v),y:axisY+15,'text-anchor':v===0?'start':v===1?'end':'middle'},`${v*100}%`))}
   const market=(+$('#marketOdds').value||50)/100;
   svg.append(el('svg:line',{x1:x(market),x2:x(market),y1:top-14,y2:axisY,stroke:'var(--paper)','stroke-dasharray':'3 4','stroke-width':1.5}),
     el('svg:text',{class:'lab dim',x:x(market),y:top-12,'text-anchor':market>.85?'end':market<.15?'start':'middle','font-size':'11'},`market ${pct(market)}`));
@@ -125,8 +128,7 @@ function renderToasts(){
   const worst=party.map(p=>({p,s:r.toast[p.id]})).filter(x=>x.s.rate>0).sort((a,b)=>b.s.rate-a.s.rate||a.s.medianTurn-b.s.medianTurn)[0];
   const lede=worst?`${worst.p.name} goes Toast in ${pct(worst.s.rate,0)} of ${r.name}'s battles, usually on turn ${worst.s.medianTurn}.`:`Nobody goes Toast in ${r.name}'s battles.`;
   $('#toasts').replaceChildren(el('h3',{},'Who goes Toast'),el('p',{class:'lede'},lede),...party.flatMap(p=>{const s=r.toast[p.id];return[
-    el('div',{class:'row'},el('span',{},p.name),el('div',{class:'bar'},el('i',{style:`width:${s.rate*100}%`})),el('span',{class:'num'},pct(s.rate,0))),
-    el('div',{class:'when'},s.medianTurn?`first Toast usually turn ${s.medianTurn}`:'never Toast')]}));
+    el('div',{class:'row'},el('span',{},p.name),el('div',{class:'bar'},el('i',{style:`width:${s.rate*100}%`})),el('span',{class:'num'},pct(s.rate,0)),el('span',{class:'when'},s.medianTurn?`first Toast usually turn ${s.medianTurn}`:'never Toast'))]}));
 }
 
 /* ---------------- bet sizing (parimutuel Kelly) ---------------- */
@@ -143,7 +145,7 @@ function updateKelly(){
   const total=Math.max(100,+$('#poolSize').value||100),marketBlue=Math.max(.01,Math.min(.99,(+$('#marketOdds').value||50)/100)),blue=total*marketBlue,red=total-blue,bankroll=Math.max(1,+$('#bankroll').value||1),beliefBlue=Math.max(1e-6,Math.min(1-1e-6,(+$('#belief').value||0)/100)),fraction=+$('#kellyFraction').value;
   $('#poolSizeOut').value=fmt(total);$('#marketOddsOut').value=pct(marketBlue);$('#beliefOut').value=pct(beliefBlue);
   $('#redPool').textContent=fmt(red);$('#bluePool').textContent=fmt(blue);$('#redOdds').textContent=`${(1+blue/red).toFixed(2)}× return`;$('#blueOdds').textContent=`${(1+red/blue).toFixed(2)}× return`;
-  const edge=(beliefBlue-marketBlue)*100;$('#beliefEdge').textContent=`${edge>=0?'+':''}${edge.toFixed(1)} pts Blue`;
+  const edge=(beliefBlue-marketBlue)*100;$('#beliefEdge').textContent=Math.abs(edge)<.05?'none':`${edge>0?'Blue':'Red'} underpriced by ${Math.abs(edge).toFixed(1)} pts`;
   const bf=fullKellyStake(bankroll,beliefBlue,blue,red),rf=fullKellyStake(bankroll,1-beliefBlue,red,blue),side=growthFor(bf,bankroll,beliefBlue,blue,red)>=growthFor(rf,bankroll,1-beliefBlue,red,blue)?'blue':'red';
   const full=side==='blue'?bf:rf,p=side==='blue'?beliefBlue:1-beliefBlue,own=side==='blue'?blue:red,other=side==='blue'?red:blue,stake=full*fraction,profit=stake?stake*other/(own+stake):0,ev=p*profit-(1-p)*stake,riskPct=stake/bankroll*100;
   $('#rec').className=`rec ${stake?side:''}`;
@@ -152,6 +154,7 @@ function updateKelly(){
   const name={1:'Full',0.75:'Three-quarter',0.5:'Half',0.25:'Quarter'}[fraction];
   $('#betExplanation').textContent=stake?`${name} Kelly risks ${riskPct.toFixed(1)}% of your points, after accounting for how your stake shrinks ${side==='blue'?'Blue':'Red'}'s payout.`:'Neither side grows your points on average at this belief and pool.';
   const risk=riskPct===0?'None':riskPct<5?'Low':riskPct<15?'Moderate':riskPct<30?'High':'Very high';
+  const call=$('#verdictCall');if(call){call.textContent=stake?`Bet ${side.toUpperCase()} · ${fmt(stake)} pts`:'No bet';call.className=`call ${stake?side:''}`;$('#verdictCallSub').textContent=`at market ${pct(marketBlue)} Blue, ${name} Kelly`}
   $('#riskLabel').textContent=`${risk} · ${riskPct.toFixed(1)}%`;$('#fullKelly').textContent=fmt(full);$('#winBankroll').textContent=fmt(bankroll+profit);$('#loseBankroll').textContent=fmt(bankroll-stake);$('#expectedBankroll').textContent=fmt(bankroll+ev);$('#expectedReturn').textContent=`${ev>=0?'+':''}${fmt(ev)}`;$('#rewardRisk').textContent=stake?`${(ev/stake*100).toFixed(1)}%`:'—';
   drawRuler();
 }
@@ -166,7 +169,7 @@ function renderTimeline(){
   const r=state.rolled,turns=[...new Set(r.trace.map(e=>e.turn))],enemies=r.trace[0].enemies.map(e=>e.name),friends=r.start.map(p=>p.name);
   const labels=el('div',{class:'tlabels','aria-hidden':'true'},el('span',{},'turn'),...friends.map(n=>el('span',{},n)),...enemies.map(n=>el('span',{},n.replace('Download Window','Window').replace('Space Ex-Boyfriend','Ex-BF'))),el('span',{},'energy'));
   const cols=turns.map(t=>{const end=endOf(r.trace,t),crash=r.trace.some(e=>e.turn===t&&e.side==='e'&&/CRASH|Bullet Hell|Angry Song/.test(e.action));
-    const b=el('button',{class:`tcol${crash?' crash':''}`,role:'tab','aria-selected':String(t===state.turn),'aria-label':`Turn ${t}`},el('span',{class:'tn'},`T${t}`),
+    const b=el('button',{class:`tcol${crash?' crash':''}`,role:'tab','aria-selected':String(t===state.turn),tabindex:t===state.turn?'0':'-1','aria-label':`Turn ${t}${crash?', boss attacked':''}`},el('span',{class:'tn'},`T${t}`),
       ...end.party.map(p=>el('span',{class:`cell${p.hp<=0?' out':''}`},el('i',{style:`width:${100*p.hp/p.max}%`}))),
       ...end.enemies.map(e=>el('span',{class:'cell boss'},el('i',{style:`width:${100*e.hp/e.max}%`}))),
       el('span',{class:'en'},String(end.energy)));

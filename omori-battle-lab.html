@@ -20,7 +20,7 @@
   --sketch:#3a3843;     /* box outline */
   --paper:#ece8e0;      /* text */
   --dim:#9a96a3;        /* secondary text */
-  --faint:#6a6773;      /* tertiary */
+  --faint:#8a8793;      /* tertiary */
   --blue:#4f93f0;       /* party · Blue */
   --red:#e85a55;        /* boss · Red */
   --juice:#a48ff0;
@@ -69,7 +69,8 @@ input[type=range]{width:100%;accent-color:var(--paper)}
 .encounters{display:flex;flex-wrap:wrap;gap:6px}
 .encounters button{display:grid;text-align:left;gap:1px;padding:7px 12px;background:transparent}
 .encounters button small{font-size:11px;color:var(--faint)}
-.encounters button[aria-checked=true]{background:var(--box2);border-color:var(--paper)}
+.encounters button[aria-checked=true]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.encounters button[aria-checked=true] small{color:#3d3a44}
 
 /* bands */
 main{display:grid;gap:18px;padding-block:22px 40px}
@@ -77,6 +78,7 @@ main{display:grid;gap:18px;padding-block:22px 40px}
 .band-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 20px}
 .band-head>p{color:var(--dim);font-size:14px;max-width:62ch}
 .split{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:18px}
+.split>*,.band-head>*{min-width:0}
 
 /* party */
 .party{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
@@ -121,8 +123,8 @@ main{display:grid;gap:18px;padding-block:22px 40px}
 .verdict .who small{color:var(--dim);font-size:13px}
 .verdict .side{font-size:14px;color:var(--dim);max-width:40ch}
 .ruler-wrap{margin:0}
-.ruler{width:100%;height:132px;display:block;overflow:visible}
-figcaption{font-size:12px;color:var(--faint);margin-top:6px}
+.ruler{width:100%;height:124px;display:block}
+figcaption{font-size:12px;color:var(--faint);margin-top:10px}
 .table-wrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);font-weight:400;text-align:right;padding:6px 8px;border-bottom:1px solid var(--sketch)}
@@ -136,18 +138,18 @@ tr:not(.me) td{color:var(--dim)}
 .why-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
 .chips{display:flex;flex-wrap:wrap;gap:4px}
 .chips button{padding:4px 10px;font-size:13px;background:transparent}
-.chips button[aria-checked=true]{background:var(--box2);border-color:var(--paper)}
+.chips button[aria-checked=true]{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 .why-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
 .why-grid figure{margin:0}
 .ends{width:100%;height:170px;display:block}
 .key{display:inline-block;width:10px;height:10px;border-radius:2px;margin:0 4px 0 8px;vertical-align:-1px}
 .key.blue{background:var(--blue)}.key.red{background:var(--red)}
 .toasts{display:grid;gap:10px}
-.toasts .row{display:grid;grid-template-columns:62px 1fr 54px;gap:8px;align-items:center;font-size:13px}
+.toasts .row{display:grid;grid-template-columns:62px 1fr 44px;gap:2px 8px;align-items:center;font-size:13px}
 .toasts .row .bar{height:8px;background:var(--box2);border-radius:4px;overflow:hidden}
 .toasts .row .bar i{display:block;height:100%;background:var(--red);border-radius:4px}
 .toasts .row .num{text-align:right;font-size:12px}
-.toasts .when{grid-column:2/4;font-size:12px;color:var(--faint);margin-top:-6px}
+.toasts .when{grid-column:2/4;font-size:12px;color:var(--faint)}
 .toasts .lede{font-size:13px;color:var(--dim)}
 
 /* bet */
@@ -196,7 +198,7 @@ tr:not(.me) td{color:var(--dim)}
 .tlabels span:first-child{height:18px;line-height:18px}
 .turn{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:18px}
 .acts{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.acts li{display:grid;grid-template-columns:70px 1fr;gap:10px;padding:8px 10px;border-radius:6px;background:var(--ink);font-size:14px}
+.acts li{display:grid;grid-template-columns:118px 1fr;gap:10px;padding:8px 10px;border-radius:6px;background:var(--ink);font-size:14px}
 .acts li b{font-weight:700}
 .acts li.enemy{background:var(--red-wash)}
 .acts li.enemy b{color:var(--red)}
@@ -225,6 +227,17 @@ tr:not(.me) td{color:var(--dim)}
 .dims li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--box2);padding-bottom:5px}
 .dims li span:last-child{color:var(--dim);text-align:right}
 
+/* out-of-date results */
+.stale{opacity:.45;transition:opacity .15s}
+.stale-badge{display:none;font:500 11px/1 var(--mono);color:var(--energy);border:1px solid var(--energy);border-radius:99px;padding:4px 8px}
+body.is-stale .stale-badge{display:inline-block}
+body.is-stale #run{box-shadow:0 0 0 3px rgba(232,195,90,.45)}
+.verdict .call{font:700 20px/1.1 var(--hand)}
+.verdict .call.blue{color:var(--blue)}.verdict .call.red{color:var(--red)}
+.legend-inline{font-size:12px;color:var(--faint)}
+.legend-inline b{color:var(--red);font-weight:400;font-family:var(--mono)}
+.scroll-hint{display:none;font-size:12px;color:var(--faint)}
+
 /* tooltip */
 .tip{position:fixed;z-index:10;pointer-events:none;background:var(--paper);color:var(--ink);border-radius:6px;padding:6px 9px;font-size:12px;line-height:1.4;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 .tip strong{font-family:var(--mono)}
@@ -245,6 +258,10 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
   .rules{grid-template-columns:1fr}
 }
 @media (max-width:560px){
+  .scroll-hint{display:block}
+  .policies .ci{display:none}
+  .lv button{padding:6px 12px}
+  .acts li{grid-template-columns:1fr}
   .party,.two,.rec-grid{grid-template-columns:1fr}
   .fight-row{grid-template-columns:1fr}
   .fight-row .primary{grid-column:auto}
@@ -275,7 +292,7 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
         <label class="field">Snacks<select id="inventory"><option value="standard">6 Candy · 3 Apple Juice · 2 Life Jam</option><option value="lean">2 Candy · 1 Apple Juice · 1 Life Jam</option><option value="none">No snacks</option></select></label>
         <label class="field toggle"><input id="headbutt" type="checkbox" checked><span>Aubrey has Headbutt</span></label>
         <label class="field">Battles per policy<select id="trials"><option value="1000">1,000</option><option value="5000" selected>5,000</option><option value="10000">10,000</option></select></label>
-        <label class="field narrow">Seed<input id="seed" type="number" value="4187" min="1" step="1"></label>
+        <label class="field narrow">Sim seed<input id="seed" type="number" value="4187" min="1" step="1"></label>
         <button id="run" class="primary">Simulate</button>
       </div>
       <details class="importer" id="importer">
@@ -293,7 +310,7 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
       <section class="band" aria-labelledby="oddsTitle">
         <div class="band-head">
           <h2 id="oddsTitle">Odds</h2>
-          <p id="status" class="status" role="status">Simulating…</p>
+          <p id="status" class="status" role="status">Simulating…</p><span class="stale-badge">out of date — press Simulate</span>
         </div>
         <div class="verdict" id="verdict"></div>
         <figure class="ruler-wrap">
@@ -313,7 +330,7 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
       <section class="band bet" aria-labelledby="betTitle">
         <div class="band-head">
           <h2 id="betTitle">Bet</h2>
-          <p>Blue = party wins. Red = boss wins. Your stake changes the payout, so the stake is optimized for log growth, not taken from a formula.</p>
+          <p>Blue = party wins. Red = boss wins. Your own stake shrinks your side's payout, and the calculator accounts for that. <span class="stale-badge">out of date</span></p>
         </div>
         <div class="pools">
           <div class="pool red-pool"><span>RED · boss</span><strong id="redPool">5,000</strong><small id="redOdds">2.00× return</small></div>
@@ -323,6 +340,7 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
         <label class="slider">Market Blue probability <output id="marketOddsOut">50.0%</output><input id="marketOdds" type="range" min="1" max="99" step="0.1" value="50"></label>
         <label class="slider belief">Our Blue probability <output id="beliefOut">50.0%</output><input id="belief" type="range" min="0.1" max="99.9" step="0.1" value="50"></label>
         <div class="presets" id="presets"></div>
+        <p class="fine">Optimistic = Best found. Pessimistic sits as far below Someone as Best found sits above it.</p>
         <div class="two">
           <label class="field">Current points<input id="bankroll" type="number" min="1" value="1000"></label>
           <label class="field">Kelly fraction<select id="kellyFraction"><option value="0.25">¼ Kelly</option><option value="0.5" selected>½ Kelly</option><option value="0.75">¾ Kelly</option><option value="1">Full Kelly</option></select></label>
@@ -352,11 +370,13 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
         <h2 id="replayTitle">Replay one battle</h2>
         <div class="replay-controls">
           <select id="scenarioPolicy" aria-label="Policy"></select>
-          <label class="field inline">Seed<input id="scenarioSeed" type="number" min="1" value="12439"></label>
+          <label class="field inline">Replay seed<input id="scenarioSeed" type="number" min="1" value="12439"></label>
           <button id="rollScenario">Roll</button>
           <button id="rerollScenario" class="ghost" title="Roll the next seed">Next seed</button>
         </div>
       </div>
+      <p class="legend-inline">Bars show Heart at the end of each turn (blue = party, red = boss). A <b>red turn number</b> means the boss attacked that turn. Yellow numbers are Energy (0–10).</p>
+      <p class="scroll-hint">Swipe the turns sideways →</p>
       <div class="table-wrap"><div class="timeline" id="timeline" role="tablist" aria-label="Turns"></div></div>
       <div class="turn" id="turn"></div>
     </section>
@@ -377,7 +397,8 @@ footer{padding-block:0 30px;font-size:12px;color:var(--faint)}
           <div>
             <label class="field">Describe how they play<textarea id="profilePrompt" rows="8"></textarea></label>
             <div class="cal-row">
-              <label class="field">Model<select id="profileModel"><option value="gpt-5.6-luna">GPT-5.6 Luna</option></select></label>
+              <span class="tag pending">calibration service not connected</span>
+            <label class="field">Model<select id="profileModel"><option value="gpt-5.6-luna">GPT-5.6 Luna</option></select></label>
               <label class="field">Reasoning<select id="profileEffort"><option value="low">Low</option><option value="medium">Medium</option></select></label>
               <button id="interpretProfile">Draft profile changes</button>
             </div>
@@ -672,7 +693,7 @@ function hover(node,lines){node.setAttribute('tabindex','0');node.addEventListen
 
 /* ---------------- encounter + party ---------------- */
 function renderEncounters(){
-  $('#encounters').replaceChildren(...Object.entries(ENCOUNTERS).map(([id,e])=>{
+  $('#encounters').replaceChildren(...['download','spaceboy','bunnies'].map(id=>[id,ENCOUNTERS[id]]).map(([id,e])=>{
     const b=el('button',{role:'radio','aria-checked':String(id===state.encounter)},e.name,el('small',{},ENC_TAGS[id]));
     b.onclick=()=>{state.encounter=id;renderEncounters();renderRules();markStale()};return b}));
 }
@@ -696,7 +717,8 @@ function renderParty(){
       el('div',{class:'gear'},`${p.weapon} · ${p.charm}`));
   }));
 }
-function markStale(){if(state.results)$('#status').textContent='Setup changed — press Simulate to update these numbers.'}
+function markStale(){if(!state.results)return;document.body.classList.add('is-stale');for(const id of['#verdict','.ruler-wrap','#policyTable','.why','#rec','#presets'])$(id).classList.add('stale');$('#status').textContent='Setup changed since this run.'}
+function clearStale(){document.body.classList.remove('is-stale');$$('.stale').forEach(x=>x.classList.remove('stale'))}
 
 /* ---------------- simulation ---------------- */
 const WORKER_SRC='const PARTY_LEVELS = [{"id":"omori","name":"OMORI","hp":[33,36,41,49,55,59,66,71,74,81,88,94,97,106,112,120,126,131,138,141,148,153,160,166,172,177,184,189,195,205,213,219,224,231,239,246,255,260,268,276,283,294,300,310,318,324,332,342,350,360],"juice":[20,25,29,31,35,39,41,46,50,53,57,61,64,73,75,82,83,86,90,95,96,100,103,106,110,112,116,121,127,129,137,142,146,150,151,154,158,161,166,173,179,186,194,203,210,218,226,232,239,250],"atk":[5,6,8,9,10,12,13,15,16,17,19,21,22,25,26,29,30,31,33,35,36,37,39,41,42,43,44,45,48,49,51,52,54,56,57,59,61,62,63,65,67,70,72,74,77,80,82,84,87,90],"def":[6,7,8,8,9,10,11,13,15,15,17,18,19,22,23,25,26,27,28,30,30,31,32,33,35,35,36,37,37,39,42,43,44,46,47,49,50,51,52,54,56,59,61,63,65,68,70,72,74,77],"spd":[6,8,9,10,11,13,15,17,19,20,21,23,26,28,29,31,32,35,37,40,41,44,46,48,50,51,53,54,57,58,60,62,64,65,66,68,70,71,74,77,79,82,85,88,90,92,94,96,98,100],"luck":[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]},{"id":"aubrey","name":"AUBREY","hp":[35,43,49,55,60,68,75,81,87,93,97,105,113,125,130,140,148,154,158,164,171,176,182,187,193,200,204,210,221,226,238,244,249,256,263,269,275,281,288,300,312,324,337,348,360,375,391,407,424,444],"juice":[10,13,15,18,20,22,24,27,29,31,32,34,36,41,43,47,50,53,54,56,58,59,62,64,66,69,71,73,77,78,83,86,87,90,93,95,98,101,104,109,114,119,124,129,134,139,144,147,148,150],"atk":[6,8,10,11,12,13,15,17,19,20,21,23,24,27,28,32,35,36,37,40,42,43,44,45,47,49,50,52,55,56,60,62,63,64,65,67,68,70,72,75,78,81,84,87,90,94,98,102,106,110],"def":[3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,20,21,22,23,25,26,27,28,29,31,32,33,34,36,37,38,39,40,41,42,43,44,45,47,49,51,53,55,57,59,62,64,66,68,70],"spd":[3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,46,48,50,52,54,57,59,61,63,65],"luck":[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3]},{"id":"kel","name":"KEL","hp":[37,38,40,42,47,52,58,61,66,71,75,77,81,90,93,103,108,110,115,119,124,128,133,139,141,147,151,157,165,167,174,179,185,187,192,196,201,205,210,218,227,236,243,251,260,269,276,286,296,300],"juice":[25,31,33,37,41,47,53,55,61,65,71,74,79,88,91,100,106,108,113,117,123,129,135,141,143,148,154,159,169,172,181,185,189,192,197,201,206,211,215,222,230,239,248,255,265,275,285,295,305,315],"atk":[4,5,6,8,9,10,11,12,13,14,16,17,18,21,22,24,25,26,27,28,29,31,32,33,34,36,38,40,42,43,46,48,49,50,51,52,54,55,56,58,61,63,66,68,70,72,74,76,78,80],"def":[4,5,5,6,7,8,9,9,10,11,12,12,13,15,16,18,19,20,22,23,24,26,27,28,29,30,32,34,36,37,39,41,42,42,43,44,46,47,48,50,52,54,56,58,60,62,64,66,68,70],"spd":[5,6,9,12,15,17,19,20,22,25,28,30,33,36,37,40,43,44,46,49,51,53,55,58,60,62,64,66,69,70,73,75,78,79,81,84,87,90,93,96,99,102,105,108,114,114,117,120,125,130],"luck":[7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7]},{"id":"hero","name":"HERO","hp":[30,36,43,46,53,62,66,73,80,84,90,97,103,114,117,128,130,137,142,148,152,158,165,172,178,180,187,194,205,209,221,227,234,242,244,251,257,264,271,282,295,306,319,331,342,354,366,377,388,400],"juice":[20,25,29,31,35,39,41,46,50,53,57,61,64,73,75,82,83,86,90,95,96,100,103,106,110,112,116,121,127,129,137,142,146,150,151,154,158,161,166,173,179,186,194,203,210,218,226,232,239,250],"atk":[4,5,6,7,8,8,9,10,10,11,13,14,14,16,17,19,20,21,22,22,23,24,25,26,27,29,30,30,32,33,35,36,37,38,39,40,41,42,43,45,47,49,51,53,55,57,59,60,61,63],"def":[6,7,8,9,10,11,12,14,15,17,18,19,20,24,25,29,30,32,34,35,36,37,38,39,40,41,42,43,47,48,50,51,52,53,54,55,56,57,58,60,62,64,66,68,70,73,76,78,80,85],"spd":[2,3,4,5,6,6,7,8,8,9,10,11,12,14,14,15,16,17,18,18,19,20,20,21,22,23,24,24,25,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45],"luck":[5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]}];\n// Equipment modifiers come from Weapons.json / Armors.json. Omori\'s +1 HP is not on\n// Shiny Knife or Seer Goggles; it matches the screenshot (72/72) and is treated as a permanent bonus.\nconst EQUIPMENT = {\n  omori:{weapon:\'Shiny Knife\',charm:\'Seer Goggles\',atk:5,hp:1,def:1,spd:0,luck:3,hit:300},\n  aubrey:{weapon:\'Comet Hammer\',charm:\'Flashlight\',atk:6,hp:0,def:4,spd:0,luck:2,hit:100},\n  kel:{weapon:\'Rubber Ball\',charm:\'Bubble Wrap\',atk:3,hp:0,def:3,spd:0,luck:0,hit:100},\n  hero:{weapon:\'Spatula\',charm:\'TV Remote\',atk:4,hp:5,def:2,spd:0,luck:0,hit:100}\n};\nconst DEFAULT_STATE={levels:{omori:8,aubrey:8,kel:7,hero:7},current:{omori:{hp:72,juice:46},aubrey:{hp:81,juice:27},kel:{hp:58,juice:53},hero:{hp:66,juice:41}}};\nconst PARTY = PARTY_LEVELS.map(p=>{const level=DEFAULT_STATE.levels[p.id],i=level-1,eq=EQUIPMENT[p.id],cur=DEFAULT_STATE.current[p.id];return{id:p.id,name:p.name[0]+p.name.slice(1).toLowerCase(),level,hp:cur.hp,maxHp:p.hp[i]+eq.hp,juice:cur.juice,maxJuice:p.juice[i],atk:p.atk[i]+eq.atk,def:p.def[i]+eq.def,spd:p.spd[i]+eq.spd,luck:p.luck[i]+eq.luck,hit:eq.hit,weapon:eq.weapon,charm:eq.charm}});\n\n// Enemy luck drives enemy critical rate (luk × 1%). Hit is 95% from each enemy\'s trait list.\nconst ENCOUNTERS = {\n  spaceboy:{name:\'Space Ex-Boyfriend\',boss:true,enemies:[{name:\'Space Ex-Boyfriend\',hp:1350,atk:15,def:16,spd:25,luck:10,kind:\'spaceboy\'}]},\n  download:{name:\'Download Window\',boss:true,enemies:[{name:\'Download Window\',hp:600,atk:10,def:5,spd:1,luck:10,kind:\'download\'}]},\n  bunnies:{name:\'2× Space Bunny\',boss:false,enemies:[{name:\'Space Bunny A\',hp:105,atk:12,def:7,spd:10,luck:10,kind:\'bunny\'},{name:\'Space Bunny B\',hp:105,atk:12,def:7,spd:10,luck:10,kind:\'bunny\'}]}\n};\n\n// coordErr: chance an actor ignores what friends already queued this turn (double heals, double snacks).\n// release: chance Omori takes Release Energy when it is offered. releaseIntent: chance Omori picks a\n// normal Attack over a skill at 10 Energy so that Release Energy can be offered at all.\nconst POLICY = {\n  suboptimal:{name:\'Suboptimal\',heal:.18,item:.08,skill:.13,follow:.72,headbutt:.18,focus:.55,coordErr:.25,release:0,releaseIntent:0},\n  decent:{name:\'Decent\',heal:.42,item:.24,skill:.48,follow:.50,headbutt:.22,focus:.84,coordErr:.10,release:0,releaseIntent:0},\n  best:{name:\'Best found\',heal:.55,item:.50,skill:.78,follow:.30,headbutt:.26,focus:.98,coordErr:0,release:1,releaseIntent:1},\n  custom:{name:\'Someone\',heal:.14,item:.06,skill:.28,follow:.80,headbutt:.27,focus:.91,coordErr:.10,release:0,releaseIntent:0}\n};\nfunction policyFor(key,encounter){\n  let p={...POLICY[key]};const boss=ENCOUNTERS[encounter].boss;\n  if(encounter===\'download\'&&key===\'best\')p={...p,heal:0,item:0,skill:1,follow:.05,headbutt:.55};\n  if(boss&&key===\'custom\')p={...p,heal:.60,item:.35,follow:.08,headbutt:.62,headbuttMinHp:.55,release:1,releaseIntent:.8};\n  return p;\n}\n\n// Source values (Skills.json / Items.json / States.json).\nconst SKILL = {\n  attack:{variance:20,crit:true},                 // a.atk*2 - b.def\n  stab:{juice:13,level:3,variance:20,forceCrit:true}, // a.atk*1.5 - b.def, <Critical Rate: 100%>\n  breadSlice:{juice:10,level:5,variance:20,crit:true},// a.atk*2.5 - b.def\n  hackAway:{juice:30,level:10,variance:20,crit:true}, // a.atk*2 - b.def, 3 random enemies\n  headbutt:{juice:5,variance:20,crit:true},       // a.atk*2.5 - b.def; needs HP >= floor(20% max); recoil floor(20% max), min 1 HP left\n  rebound:{juice:15,level:4,variance:20,crit:true},   // a.atk*2.5 - b.def, all enemies\n  runNGun:{juice:15,level:9,variance:20,crit:true},   // a.agi*1.5 - b.def\n  cook:{juice:10,variance:20},                    // heal b.mhp*.75\n  smile:{juice:25,level:10},\n  trip1:{energy:3,variance:20,crit:true},         // (a.atk + a.luk) - b.def, Speed Down\n  passAubrey1:{energy:3,variance:20,crit:true},   // Aubrey.atk + Kel.atk - b.def, certain hit\n  release1:{energy:10,damage:300}                 // tier 1; +25% ATK/DEF/SPD/LUCK for the rest of the battle\n};\nconst ITEM = {candy:{name:\'Candy\',hp:30},juice:{name:\'Apple Juice\',juice:25},jam:{name:\'Life Jam\',revive:.5}};\n\nfunction rng32(seed){let a=seed>>>0;return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}\nfunction pick(rng,arr){return arr[Math.floor(rng()*arr.length)]}\nconst randInt=(rng,max)=>Math.floor(max*rng());\nfunction alive(list){return list.filter(x=>x.hp>0)}\nconst ratio=x=>x.hp/x.maxHp;\n// RPG Maker params are rounded after rate multipliers; Release Energy\'s state is a ×1.25 rate that does not stack.\nfunction stat(x,k){return x.released?Math.round(x[k]*1.25):x[k]}\n\n// YEP_DamageCore flow as configured in plugins.js: formula (floored at 0) → critical ×1.5 then +1.5 →\n// variance (RPG Maker triangular ±amp, amp = floor(|v|·var%)) → guard → Math.round.\nfunction rollDamage(b,base,{critRate=0,forceCrit=false,variance=20}={}){\n  const crit=forceCrit||(critRate>0&&b.rng()<critRate);\n  let v=Math.max(0,base);\n  if(crit)v=v*1.5+1.5;\n  const amp=Math.floor(Math.abs(v)*variance/100);\n  if(amp>0)v+=randInt(b.rng,amp+1)+randInt(b.rng,amp+1)-amp;\n  return{value:Math.round(v),crit};\n}\nfunction applyToEnemy(target,value){const before=target.hp;target.hp=Math.max(0,target.hp-value);return before-target.hp}\n// Energy rises by one whenever an actor takes HP damage > 0 from a hit (YIN_OmoriFixes).\nfunction applyToActor(b,target,value){const before=target.hp;target.hp=Math.max(0,target.hp-value);const dealt=before-target.hp;if(dealt>0)b.energy=Math.min(10,b.energy+1);return dealt}\nfunction heal(target,amount){const before=target.hp;target.hp=Math.min(target.maxHp,target.hp+amount);return target.hp-before}\n\nfunction scaleParty(levels,current){return PARTY_LEVELS.map(p=>{const level=Math.max(1,Math.min(50,levels?.[p.id]||DEFAULT_STATE.levels[p.id])),i=level-1,eq=EQUIPMENT[p.id],maxHp=p.hp[i]+eq.hp,maxJuice=p.juice[i],cur=current?.[p.id];return{id:p.id,name:p.name[0]+p.name.slice(1).toLowerCase(),level,maxHp,hp:Math.max(0,Math.min(maxHp,cur?.hp??maxHp)),maxJuice,juice:Math.max(0,Math.min(maxJuice,cur?.juice??maxJuice)),atk:p.atk[i]+eq.atk,def:p.def[i]+eq.def,spd:p.spd[i]+eq.spd,luck:p.luck[i]+eq.luck,hit:eq.hit,weapon:eq.weapon,charm:eq.charm,released:false}})}\nfunction makeBattle(setup,rng){\n  const party=scaleParty(setup.levels,setup.current);\n  const enemies=ENCOUNTERS[setup.encounter].enemies.map((e,i)=>({...e,id:`e${i}`,maxHp:e.hp}));\n  const inv=setup.inventory===\'standard\'?{candy:6,juice:3,jam:2}:setup.inventory===\'lean\'?{candy:2,juice:1,jam:1}:{candy:0,juice:0,jam:0};\n  return{party,enemies,inv,energy:3,turn:0,rng,log:[]};\n}\nfunction targetEnemy(b,p){const targets=alive(b.enemies);if(!targets.length)return null;if(p.focus>.8)return[...targets].sort((a,c)=>a.hp-c.hp)[0];return b.rng()<p.focus?targets[0]:pick(b.rng,targets)}\n// RPG Maker smooth targeting: a dead chosen target falls through to the next living member.\nfunction smooth(list,target){if(target&&target.hp>0)return target;const i=list.indexOf(target);for(let k=1;k<=list.length;k++){const t=list[(i+k)%list.length];if(t.hp>0)return t}return null}\n\n// ---------- Input phase: every living friend commits a command before anything resolves ----------\nfunction planTurn(b,p,key,setup){\n  const plans=new Map(),queuedHeal=new Set(),queuedRevive=new Set(),reserved={candy:0,juice:0,jam:0};\n  const has=item=>b.inv[item]-reserved[item]>0;\n  for(const actor of b.party){\n    if(actor.hp<=0)continue;\n    const sloppy=b.rng()<p.coordErr;\n    const needs=(threshold,exclude)=>alive(b.party).filter(x=>ratio(x)<threshold&&(sloppy||!exclude.has(x.id))).sort((a,c)=>ratio(a)-ratio(c))[0];\n    const dead=b.party.filter(x=>x.hp<=0);\n    // Life Jam: custom waits for a multi-Toast crisis.\n    if(dead.length>=(key===\'custom\'?2:1)&&has(\'jam\')){const t=dead.find(x=>sloppy||!queuedRevive.has(x.id));if(t){reserved.jam++;queuedRevive.add(t.id);plans.set(actor.id,{kind:\'item\',item:\'jam\',target:t});continue}}\n    if(actor.id===\'hero\'&&actor.juice>=SKILL.cook.juice){const t=needs(p.heal,queuedHeal);if(t){queuedHeal.add(t.id);plans.set(actor.id,{kind:\'cook\',target:t});continue}}\n    if(has(\'candy\')){const t=needs(p.item,queuedHeal);if(t){reserved.candy++;queuedHeal.add(t.id);plans.set(actor.id,{kind:\'item\',item:\'candy\',target:t});continue}}\n    if(key!==\'custom\'&&actor.juice<8&&has(\'juice\')&&b.rng()<p.item){reserved.juice++;plans.set(actor.id,{kind:\'item\',item:\'juice\',target:actor});continue}\n    plans.set(actor.id,planOffense(actor,b,p,key,setup));\n  }\n  return plans;\n}\nfunction planOffense(actor,b,p,key,setup){\n  const target=targetEnemy(b,p);if(!target)return{kind:\'none\'};\n  if(actor.id===\'aubrey\'&&setup.headbutt&&actor.juice>=SKILL.headbutt.juice&&actor.hp>=Math.floor(actor.maxHp*.2)&&ratio(actor)>(p.headbuttMinHp??.32)&&b.rng()<p.headbutt)return{kind:\'headbutt\',target};\n  if(actor.id===\'kel\'&&actor.level>=SKILL.rebound.level&&actor.juice>=15&&b.rng()<p.skill)return{kind:actor.level>=SKILL.runNGun.level?\'runNGun\':\'rebound\',target};\n  if(actor.id===\'omori\'){\n    const releaseSetup=b.energy>=10&&alive(b.party).length===4&&b.rng()<p.releaseIntent;\n    if(releaseSetup)return{kind:\'attack\',target,intent:\'release\'};\n    if(key===\'custom\'&&actor.level>=SKILL.stab.level&&actor.juice>=SKILL.stab.juice)return{kind:\'stab\',target};\n    if(actor.level>=SKILL.hackAway.level&&actor.juice>=SKILL.hackAway.juice&&b.rng()<p.skill*.35)return{kind:\'hackAway\',target};\n    if(actor.level>=SKILL.breadSlice.level&&actor.juice>=SKILL.breadSlice.juice&&b.rng()<p.skill)return{kind:\'breadSlice\',target};\n  }\n  if(actor.id===\'hero\'&&actor.level>=SKILL.smile.level&&actor.juice>=SKILL.smile.juice&&target.kind===\'spaceboy\'&&b.rng()<p.skill*.25)return{kind:\'smile\',target};\n  return{kind:\'attack\',target};\n}\n\n// ---------- Resolution ----------\nconst critOf=actor=>stat(actor,\'luck\')/100;\nfunction strike(b,actor,target,base,spec){const r=rollDamage(b,base,{critRate:spec.crit?critOf(actor):0,forceCrit:spec.forceCrit,variance:spec.variance});return{damage:applyToEnemy(target,r.value),crit:r.crit}}\nconst critTag=r=>r.crit?\' (critical)\':\'\';\nfunction resolveActor(actor,plan,b,p,key,setup){\n  const foes=b.enemies;\n  if(plan.kind===\'item\'){\n    if(b.inv[plan.item]<=0)return`tries to use ${ITEM[plan.item].name}, but none are left`;\n    if(plan.item===\'jam\'){const t=plan.target.hp<=0?plan.target:b.party.find(x=>x.hp<=0);if(!t)return\'readies Life Jam, but nobody is Toast\';b.inv.jam--;t.hp=Math.floor(t.maxHp*ITEM.jam.revive);return`uses Life Jam on ${t.name} → ${t.hp} Heart`}\n    const t=smooth(b.party,plan.target);if(!t)return\'has no target\';b.inv[plan.item]--;\n    if(plan.item===\'candy\')return`uses Candy on ${t.name} → +${heal(t,ITEM.candy.hp)} Heart`;\n    const before=t.juice;t.juice=Math.min(t.maxJuice,t.juice+ITEM.juice.juice);return`uses Apple Juice on ${t.name} → +${t.juice-before} Juice`;\n  }\n  if(plan.kind===\'cook\'){\n    if(actor.juice<SKILL.cook.juice)return\'cannot afford Cook\';\n    const t=smooth(b.party,plan.target);if(!t)return\'has no target\';actor.juice-=SKILL.cook.juice;\n    const r=rollDamage(b,t.maxHp*.75,{variance:SKILL.cook.variance});return`uses Cook on ${t.name} → +${heal(t,r.value)} Heart`;\n  }\n  if(plan.kind===\'none\')return\'has no target\';\n  const t=smooth(foes,plan.target);if(!t)return\'has no target\';\n  const def=t.def,atk=stat(actor,\'atk\');\n  switch(plan.kind){\n    case\'stab\':{if(actor.juice<13)break;actor.juice-=13;const r=strike(b,actor,t,atk*1.5-def,SKILL.stab);return`uses Stab on ${t.name} for ${r.damage} damage (guaranteed critical)`}\n    case\'breadSlice\':{if(actor.juice<10)break;actor.juice-=10;const r=strike(b,actor,t,atk*2.5-def,SKILL.breadSlice);return`uses Bread Slice on ${t.name} for ${r.damage} damage${critTag(r)}`}\n    case\'hackAway\':{if(actor.juice<30)break;actor.juice-=30;const hits=[];for(let i=0;i<3;i++){const e=pick(b.rng,alive(foes));if(!e)break;hits.push(`${strike(b,actor,e,atk*2-e.def,SKILL.hackAway).damage}`)}return`uses Hack Away for ${hits.join(\' + \')} damage`}\n    case\'headbutt\':{const need=Math.floor(actor.maxHp*.2);if(actor.juice<5||actor.hp<need)break;actor.juice-=5;const r=strike(b,actor,t,atk*2.5-def,SKILL.headbutt);const before=actor.hp;actor.hp=Math.max(1,actor.hp-need);return`uses Headbutt on ${t.name} for ${r.damage} damage${critTag(r)}; takes ${before-actor.hp} recoil`}\n    case\'rebound\':{if(actor.juice<15)break;actor.juice-=15;const hits=alive(foes).map(e=>`${e.name} ${strike(b,actor,e,atk*2.5-e.def,SKILL.rebound).damage}`);return`uses Rebound: ${hits.join(\', \')} damage`}\n    case\'runNGun\':{if(actor.juice<15)break;actor.juice-=15;const r=strike(b,actor,t,stat(actor,\'spd\')*1.5-def,SKILL.runNGun);return`uses Run \'n Gun on ${t.name} for ${r.damage} damage${critTag(r)}`}\n    case\'smile\':{if(actor.juice<25)break;actor.juice-=25;t.atkDown=Math.max(t.atkDown||0,2);return`uses Smile on ${t.name}`}\n  }\n  if(plan.kind!==\'attack\')return`cannot use ${plan.kind} and does nothing`;\n  const r=strike(b,actor,t,atk*2-def,SKILL.attack);\n  return`attacks ${t.name} for ${r.damage} damage${critTag(r)}`+followUp(actor,b,p,key,setup,t);\n}\n// Follow-ups are offered after a normal Attack resolves and are chosen at that moment.\nfunction followUp(actor,b,p,key,setup,lastTarget){\n  if(!alive(b.enemies).length)return\'\';\n  const friendsUp=[\'aubrey\',\'kel\',\'hero\'].every(id=>b.party.find(x=>x.id===id).hp>0);\n  if(actor.id===\'omori\'&&b.energy>=10&&friendsUp&&b.rng()<p.release){\n    b.energy-=10;const hits=alive(b.enemies).map(e=>`${e.name} ${applyToEnemy(e,SKILL.release1.damage)}`);\n    for(const f of alive(b.party))f.released=true;\n    return` → Release Energy: ${hits.join(\', \')} damage; living friends gain +25% ATK/DEF/SPD/LUCK`;\n  }\n  if(b.energy<3||b.rng()>=p.follow)return\'\';\n  const t=smooth(b.enemies,lastTarget);\n  if(actor.id===\'omori\'){b.energy-=3;const r=strike(b,actor,t,stat(actor,\'atk\')+stat(actor,\'luck\')-t.def,SKILL.trip1);t.speedDown=true;return` → Trip for ${r.damage} damage${critTag(r)} (Speed Down)`}\n  if(actor.id===\'kel\'){const aubrey=b.party.find(x=>x.id===\'aubrey\');if(aubrey.hp<=0)return\'\';b.energy-=3;const e=pick(b.rng,alive(b.enemies));const r=strike(b,actor,e,stat(aubrey,\'atk\')+stat(actor,\'atk\')-e.def,SKILL.passAubrey1);return` → Pass to Aubrey hits ${e.name} for ${r.damage} damage${critTag(r)}`}\n  return\'\'; // Aubrey\'s Look At and Hero\'s Call follow-ups are not modeled yet.\n}\n\n// ---------- Enemies ----------\n// Enemy hits: 95% hit trait, luck-based critical, standard variance.\nfunction enemyStrike(b,e,target,base,{certain=false,variance=20,crit=true}={}){\n  if(!certain&&b.rng()>=.95)return{text:`${target.name} (miss)`,damage:0};\n  const r=rollDamage(b,base,{critRate:crit?(e.luck||0)/100:0,variance});\n  const dealt=applyToActor(b,target,r.value);return{text:`${target.name} ${dealt}${r.crit?\' critical\':\'\'}`,damage:dealt};\n}\nfunction spaceboyAction(e,b){\n  const a=e.atk*Math.max(.55,1-(e.atkDown||0)*.12);const hp=e.hp/e.maxHp;const phase=hp<=.25?3:hp<=.5?2:hp<=.75?1:0;const rage=[1,1.3,1.5,2][phase];\n  const targets=alive(b.party);if(!targets.length)return\'has no target\';const one=pick(b.rng,targets);\n  if(b.rng()<.35)return`uses Attack on ${enemyStrike(b,e,one,a*2*rage+5-stat(one,\'def\')).text}`;\n  if(hp<=.25){const hits=[];for(let i=0;i<4;i++){const now=alive(b.party);if(!now.length)break;hits.push(enemyStrike(b,e,pick(b.rng,now),20,{variance:0,crit:false}).text)}return`uses Bullet Hell: ${hits.join(\', \')}`}\n  if(b.rng()<.30)return\'uses Do Nothing\';\n  if(b.rng()<.30)return\'uses Angsty Song (emotion effect not yet modeled)\';\n  if(b.rng()<.30)return`uses Angry Song: ${alive(b.party).map(t=>enemyStrike(b,e,t,a*2*rage-stat(t,\'def\')).text).join(\', \')}`;\n  return`uses Space Laser on ${enemyStrike(b,e,one,a*2.5*rage-stat(one,\'def\')).text}`;\n}\nfunction enemyAction(e,b){\n  if(e.hp<=0)return null;\n  if(e.kind===\'spaceboy\')return spaceboyAction(e,b);\n  if(e.kind===\'download\'){\n    // AI Priority: turns 1,2,4,5 Do Nothing; turn 3 and 6+ Crash. Crash adds +1000% accuracy to the user first,\n    // so it cannot miss; damage is round(80% max Heart) with 0 variance and no critical.\n    if(b.turn===3||b.turn>=6)return`uses CRASH: ${alive(b.party).map(t=>`${t.name} ${applyToActor(b,t,Math.round(t.maxHp*.8))}`).join(\', \')} damage`;\n    return b.turn===1||b.turn===4?\'uses Do Nothing (“99%…”)\':\'uses Do Nothing (“still 99%…”)\';\n  }\n  const t=pick(b.rng,alive(b.party));if(!t)return\'has no target\';\n  if(b.rng()<.55)return`uses Attack on ${enemyStrike(b,e,t,e.atk*2-stat(t,\'def\')).text}`;\n  if(b.rng()<.35)return\'uses Do Nothing\';\n  return`uses Bunny Beam on ${enemyStrike(b,e,t,e.atk*3-stat(t,\'def\')).text}`;\n}\n\n// Action order: agility (+ skill speed; none of the modeled commands has one), no random roll.\n// Ties keep party order (Omori, Aubrey, Kel, Hero) then troop order, as Array.sort is stable.\nfunction actionOrder(b){\n  const list=[...b.party.map(x=>({side:\'p\',x})),...b.enemies.map(x=>({side:\'e\',x}))];\n  const spd=q=>q.side===\'p\'?stat(q.x,\'spd\'):Math.round(q.x.spd*(q.x.speedDown?.8:1));\n  return list.filter(q=>q.x.hp>0).sort((a,c)=>spd(c)-spd(a));\n}\nfunction oneBattle(setup,key,seed,withTrace=false){\n  const b=makeBattle(setup,rng32(seed));const p=policyFor(key,setup.encounter);const toasted={};\n  while(alive(b.party).length&&alive(b.enemies).length&&b.turn<100){\n    b.turn++;\n    const plans=planTurn(b,p,key,setup);\n    for(const q of actionOrder(b)){\n      if(!alive(b.party).length||!alive(b.enemies).length)break;\n      if(q.x.hp<=0)continue; // Toasted earlier this turn: the queued command is lost.\n      const action=q.side===\'p\'?resolveActor(q.x,plans.get(q.x.id)||{kind:\'none\'},b,p,key,setup):enemyAction(q.x,b);\n      for(const m of b.party)if(m.hp<=0&&!(m.id in toasted))toasted[m.id]=b.turn;\n      if(action&&withTrace)b.log.push({turn:b.turn,actor:q.x.name,side:q.side,action,energy:b.energy,party:b.party.map(x=>({name:x.name,hp:x.hp,max:x.maxHp,juice:x.juice})),enemies:b.enemies.map(x=>({name:x.name,hp:x.hp,max:x.maxHp}))});\n    }\n  }\n  return{win:alive(b.enemies).length===0,turns:b.turn,survivors:alive(b.party).length,toasted,trace:b.log};\n}\nfunction wilson(w,n){if(!n)return[0,0];const z=1.96,p=w/n,d=1+z*z/n,c=(p+z*z/(2*n))/d,m=z*Math.sqrt((p*(1-p)+z*z/(4*n))/n)/d;return[Math.max(0,c-m),Math.min(1,c+m)]}\n// Besides the win rate, report how battles end: length by outcome, and how often / when each friend first goes Toast.\nfunction simulate(setup,key,trials,seed){\n  let wins=0,survivors=0;const turns=[],ends={},toast={};\n  for(let i=0;i<trials;i++){\n    const r=oneBattle(setup,key,(seed+i*2654435761+(key.charCodeAt(0)<<16))>>>0);\n    if(r.win)wins++;turns.push(r.turns);survivors+=r.survivors;\n    const e=ends[r.turns]??={win:0,loss:0};e[r.win?\'win\':\'loss\']++;\n    for(const[id,t]of Object.entries(r.toasted))(toast[id]??=[]).push(t);\n  }\n  turns.sort((a,b)=>a-b);\n  const toastStats=Object.fromEntries(PARTY_LEVELS.map(({id})=>{const t=(toast[id]||[]).sort((a,b)=>a-b);return[id,{rate:t.length/trials,medianTurn:t.length?t[Math.floor(t.length/2)]:null}]}));\n  return{key,name:POLICY[key].name,wins,trials,rate:wins/trials,ci:wilson(wins,trials),medianTurns:turns[Math.floor(turns.length/2)],avgSurvivors:survivors/trials,ends,toast:toastStats};\n}\nfunction runAll(setup,trials,seed){return[\'suboptimal\',\'decent\',\'best\',\'custom\'].map(k=>simulate(setup,k,trials,seed))}\nfunction rollScenario(setup,key,seed){const r=oneBattle(setup,key,seed,true);return{policy:POLICY[key].name,seed,win:r.win,turns:r.turns,trace:r.trace}}\nfunction partyAt(levels,current){return scaleParty(levels,current)}\nconst POLICY_NAMES=Object.fromEntries(Object.entries(POLICY).map(([k,v])=>[k,v.name]));\nconst __test={rollDamage,stat,policyFor,planTurn,makeBattle,rng32,actionOrder,resolveActor};\n\nself.onmessage=e=>{const{setup,trials,seed}=e.data;self.postMessage(runAll(setup,trials,seed))};\n';
@@ -709,6 +731,7 @@ async function run(){
   catch{await new Promise(r=>setTimeout(r,20));results=runAll(s,n,seed)}
   state.results={list:results,encounter:s.encounter};$('#run').disabled=false;
   $('#status').textContent=`${n.toLocaleString()} battles per policy · seed ${seed} · ${Math.round(performance.now()-t0)} ms. The same seed reproduces these numbers.`;
+  clearStale();$('#belief').value=(Math.max(.001,Math.min(.999,byKey('custom').rate))*100).toFixed(1);
   renderOdds();renderPresets();updateKelly();
 }
 const byKey=k=>state.results?.list.find(r=>r.key===k);
@@ -718,20 +741,21 @@ function renderOdds(){
   $('#verdict').replaceChildren(
     el('div',{class:'who'},el('span',{},'Someone'),el('small',{},`win chance vs ${enc}`)),
     el('div',{class:'big'},pct(me.rate)),
+    el('div',{class:'who'},el('span',{class:'call',id:'verdictCall'},''),el('small',{id:'verdictCallSub'},'')),
     el('p',{class:'side'},`Best found play wins ${pct(best.rate)}. The gap is how much the profile's habits cost in this fight.`));
   drawRuler();
-  const t=$('#policyTable');t.replaceChildren(el('thead',{},el('tr',{},...['Policy','Win','95% interval','Median turns','Friends standing'].map(h=>el('th',{},h)))),
-    el('tbody',{},...POLICIES.map(k=>{const r=byKey(k);return el('tr',{class:k==='custom'?'me':''},el('td',{},r.name),el('td',{},pct(r.rate)),el('td',{},`${pct(r.ci[0])}–${pct(r.ci[1])}`),el('td',{},String(r.medianTurns)),el('td',{},r.avgSurvivors.toFixed(1)))})));
+  const t=$('#policyTable');t.replaceChildren(el('thead',{},el('tr',{},...['Policy','Win','95% interval','Median turns','Alive at end'].map((h,i)=>el('th',{class:i===2?'ci':null},h)))),
+    el('tbody',{},...POLICIES.map(k=>{const r=byKey(k);return el('tr',{class:k==='custom'?'me':''},el('td',{},r.name),el('td',{},pct(r.rate)),el('td',{class:'ci'},`${pct(r.ci[0])}–${pct(r.ci[1])}`),el('td',{},String(r.medianTurns)),el('td',{},r.avgSurvivors.toFixed(1)))})));
   $('#whyPolicy').replaceChildren(...POLICIES.map(k=>{const b=el('button',{role:'radio','aria-checked':String(k===state.why)},POLICY_NAMES[k]);b.onclick=()=>{state.why=k;renderOdds()};return b}));
   drawEnds();renderToasts();
 }
 
 // One horizontal probability scale: a row per policy (dot + 95% whisker), plus the market's Blue line.
 function drawRuler(){
-  const svg=$('#ruler');if(!state.results)return;const W=svg.clientWidth||600,H=132,L=10,R=10,top=22,row=24;
+  const svg=$('#ruler');if(!state.results)return;const W=svg.clientWidth||600,H=124,L=14,R=14,top=22,row=20;
   const x=v=>L+v*(W-L-R);svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren();
   const axisY=top+row*4+4;
-  for(const v of[0,.25,.5,.75,1]){svg.append(el('svg:line',{class:'grid',x1:x(v),x2:x(v),y1:top-6,y2:axisY}),el('svg:text',{class:'ax',x:x(v),y:axisY+16,'text-anchor':v===0?'start':v===1?'end':'middle'},`${v*100}%`))}
+  for(const v of[0,.25,.5,.75,1]){svg.append(el('svg:line',{class:'grid',x1:x(v),x2:x(v),y1:top-6,y2:axisY}),el('svg:text',{class:'ax',x:x(v),y:axisY+15,'text-anchor':v===0?'start':v===1?'end':'middle'},`${v*100}%`))}
   const market=(+$('#marketOdds').value||50)/100;
   svg.append(el('svg:line',{x1:x(market),x2:x(market),y1:top-14,y2:axisY,stroke:'var(--paper)','stroke-dasharray':'3 4','stroke-width':1.5}),
     el('svg:text',{class:'lab dim',x:x(market),y:top-12,'text-anchor':market>.85?'end':market<.15?'start':'middle','font-size':'11'},`market ${pct(market)}`));
@@ -769,8 +793,7 @@ function renderToasts(){
   const worst=party.map(p=>({p,s:r.toast[p.id]})).filter(x=>x.s.rate>0).sort((a,b)=>b.s.rate-a.s.rate||a.s.medianTurn-b.s.medianTurn)[0];
   const lede=worst?`${worst.p.name} goes Toast in ${pct(worst.s.rate,0)} of ${r.name}'s battles, usually on turn ${worst.s.medianTurn}.`:`Nobody goes Toast in ${r.name}'s battles.`;
   $('#toasts').replaceChildren(el('h3',{},'Who goes Toast'),el('p',{class:'lede'},lede),...party.flatMap(p=>{const s=r.toast[p.id];return[
-    el('div',{class:'row'},el('span',{},p.name),el('div',{class:'bar'},el('i',{style:`width:${s.rate*100}%`})),el('span',{class:'num'},pct(s.rate,0))),
-    el('div',{class:'when'},s.medianTurn?`first Toast usually turn ${s.medianTurn}`:'never Toast')]}));
+    el('div',{class:'row'},el('span',{},p.name),el('div',{class:'bar'},el('i',{style:`width:${s.rate*100}%`})),el('span',{class:'num'},pct(s.rate,0)),el('span',{class:'when'},s.medianTurn?`first Toast usually turn ${s.medianTurn}`:'never Toast'))]}));
 }
 
 /* ---------------- bet sizing (parimutuel Kelly) ---------------- */
@@ -787,7 +810,7 @@ function updateKelly(){
   const total=Math.max(100,+$('#poolSize').value||100),marketBlue=Math.max(.01,Math.min(.99,(+$('#marketOdds').value||50)/100)),blue=total*marketBlue,red=total-blue,bankroll=Math.max(1,+$('#bankroll').value||1),beliefBlue=Math.max(1e-6,Math.min(1-1e-6,(+$('#belief').value||0)/100)),fraction=+$('#kellyFraction').value;
   $('#poolSizeOut').value=fmt(total);$('#marketOddsOut').value=pct(marketBlue);$('#beliefOut').value=pct(beliefBlue);
   $('#redPool').textContent=fmt(red);$('#bluePool').textContent=fmt(blue);$('#redOdds').textContent=`${(1+blue/red).toFixed(2)}× return`;$('#blueOdds').textContent=`${(1+red/blue).toFixed(2)}× return`;
-  const edge=(beliefBlue-marketBlue)*100;$('#beliefEdge').textContent=`${edge>=0?'+':''}${edge.toFixed(1)} pts Blue`;
+  const edge=(beliefBlue-marketBlue)*100;$('#beliefEdge').textContent=Math.abs(edge)<.05?'none':`${edge>0?'Blue':'Red'} underpriced by ${Math.abs(edge).toFixed(1)} pts`;
   const bf=fullKellyStake(bankroll,beliefBlue,blue,red),rf=fullKellyStake(bankroll,1-beliefBlue,red,blue),side=growthFor(bf,bankroll,beliefBlue,blue,red)>=growthFor(rf,bankroll,1-beliefBlue,red,blue)?'blue':'red';
   const full=side==='blue'?bf:rf,p=side==='blue'?beliefBlue:1-beliefBlue,own=side==='blue'?blue:red,other=side==='blue'?red:blue,stake=full*fraction,profit=stake?stake*other/(own+stake):0,ev=p*profit-(1-p)*stake,riskPct=stake/bankroll*100;
   $('#rec').className=`rec ${stake?side:''}`;
@@ -796,6 +819,7 @@ function updateKelly(){
   const name={1:'Full',0.75:'Three-quarter',0.5:'Half',0.25:'Quarter'}[fraction];
   $('#betExplanation').textContent=stake?`${name} Kelly risks ${riskPct.toFixed(1)}% of your points, after accounting for how your stake shrinks ${side==='blue'?'Blue':'Red'}'s payout.`:'Neither side grows your points on average at this belief and pool.';
   const risk=riskPct===0?'None':riskPct<5?'Low':riskPct<15?'Moderate':riskPct<30?'High':'Very high';
+  const call=$('#verdictCall');if(call){call.textContent=stake?`Bet ${side.toUpperCase()} · ${fmt(stake)} pts`:'No bet';call.className=`call ${stake?side:''}`;$('#verdictCallSub').textContent=`at market ${pct(marketBlue)} Blue, ${name} Kelly`}
   $('#riskLabel').textContent=`${risk} · ${riskPct.toFixed(1)}%`;$('#fullKelly').textContent=fmt(full);$('#winBankroll').textContent=fmt(bankroll+profit);$('#loseBankroll').textContent=fmt(bankroll-stake);$('#expectedBankroll').textContent=fmt(bankroll+ev);$('#expectedReturn').textContent=`${ev>=0?'+':''}${fmt(ev)}`;$('#rewardRisk').textContent=stake?`${(ev/stake*100).toFixed(1)}%`:'—';
   drawRuler();
 }
@@ -810,7 +834,7 @@ function renderTimeline(){
   const r=state.rolled,turns=[...new Set(r.trace.map(e=>e.turn))],enemies=r.trace[0].enemies.map(e=>e.name),friends=r.start.map(p=>p.name);
   const labels=el('div',{class:'tlabels','aria-hidden':'true'},el('span',{},'turn'),...friends.map(n=>el('span',{},n)),...enemies.map(n=>el('span',{},n.replace('Download Window','Window').replace('Space Ex-Boyfriend','Ex-BF'))),el('span',{},'energy'));
   const cols=turns.map(t=>{const end=endOf(r.trace,t),crash=r.trace.some(e=>e.turn===t&&e.side==='e'&&/CRASH|Bullet Hell|Angry Song/.test(e.action));
-    const b=el('button',{class:`tcol${crash?' crash':''}`,role:'tab','aria-selected':String(t===state.turn),'aria-label':`Turn ${t}`},el('span',{class:'tn'},`T${t}`),
+    const b=el('button',{class:`tcol${crash?' crash':''}`,role:'tab','aria-selected':String(t===state.turn),tabindex:t===state.turn?'0':'-1','aria-label':`Turn ${t}${crash?', boss attacked':''}`},el('span',{class:'tn'},`T${t}`),
       ...end.party.map(p=>el('span',{class:`cell${p.hp<=0?' out':''}`},el('i',{style:`width:${100*p.hp/p.max}%`}))),
       ...end.enemies.map(e=>el('span',{class:'cell boss'},el('i',{style:`width:${100*e.hp/e.max}%`}))),
       el('span',{class:'en'},String(end.energy)));
