@@ -207,7 +207,7 @@ function actionOrder(b){
   return list.filter(q=>q.x.hp>0).sort((a,c)=>spd(c)-spd(a));
 }
 function oneBattle(setup,key,seed,withTrace=false){
-  const b=makeBattle(setup,rng32(seed));const p=policyFor(key,setup.encounter);
+  const b=makeBattle(setup,rng32(seed));const p=policyFor(key,setup.encounter);const toasted={};
   while(alive(b.party).length&&alive(b.enemies).length&&b.turn<100){
     b.turn++;
     const plans=planTurn(b,p,key,setup);
@@ -215,13 +215,28 @@ function oneBattle(setup,key,seed,withTrace=false){
       if(!alive(b.party).length||!alive(b.enemies).length)break;
       if(q.x.hp<=0)continue; // Toasted earlier this turn: the queued command is lost.
       const action=q.side==='p'?resolveActor(q.x,plans.get(q.x.id)||{kind:'none'},b,p,key,setup):enemyAction(q.x,b);
+      for(const m of b.party)if(m.hp<=0&&!(m.id in toasted))toasted[m.id]=b.turn;
       if(action&&withTrace)b.log.push({turn:b.turn,actor:q.x.name,side:q.side,action,energy:b.energy,party:b.party.map(x=>({name:x.name,hp:x.hp,max:x.maxHp,juice:x.juice})),enemies:b.enemies.map(x=>({name:x.name,hp:x.hp,max:x.maxHp}))});
     }
   }
-  return{win:alive(b.enemies).length===0,turns:b.turn,survivors:alive(b.party).length,trace:b.log};
+  return{win:alive(b.enemies).length===0,turns:b.turn,survivors:alive(b.party).length,toasted,trace:b.log};
 }
 function wilson(w,n){if(!n)return[0,0];const z=1.96,p=w/n,d=1+z*z/n,c=(p+z*z/(2*n))/d,m=z*Math.sqrt((p*(1-p)+z*z/(4*n))/n)/d;return[Math.max(0,c-m),Math.min(1,c+m)]}
-export function simulate(setup,key,trials,seed){let wins=0,survivors=0;const turns=[];for(let i=0;i<trials;i++){const r=oneBattle(setup,key,(seed+i*2654435761+(key.charCodeAt(0)<<16))>>>0);if(r.win)wins++;turns.push(r.turns);survivors+=r.survivors}turns.sort((a,b)=>a-b);return{key,name:POLICY[key].name,wins,trials,rate:wins/trials,ci:wilson(wins,trials),medianTurns:turns[Math.floor(turns.length/2)],avgSurvivors:survivors/trials}}
+// Besides the win rate, report how battles end: length by outcome, and how often / when each friend first goes Toast.
+export function simulate(setup,key,trials,seed){
+  let wins=0,survivors=0;const turns=[],ends={},toast={};
+  for(let i=0;i<trials;i++){
+    const r=oneBattle(setup,key,(seed+i*2654435761+(key.charCodeAt(0)<<16))>>>0);
+    if(r.win)wins++;turns.push(r.turns);survivors+=r.survivors;
+    const e=ends[r.turns]??={win:0,loss:0};e[r.win?'win':'loss']++;
+    for(const[id,t]of Object.entries(r.toasted))(toast[id]??=[]).push(t);
+  }
+  turns.sort((a,b)=>a-b);
+  const toastStats=Object.fromEntries(PARTY_LEVELS.map(({id})=>{const t=(toast[id]||[]).sort((a,b)=>a-b);return[id,{rate:t.length/trials,medianTurn:t.length?t[Math.floor(t.length/2)]:null}]}));
+  return{key,name:POLICY[key].name,wins,trials,rate:wins/trials,ci:wilson(wins,trials),medianTurns:turns[Math.floor(turns.length/2)],avgSurvivors:survivors/trials,ends,toast:toastStats};
+}
 export function runAll(setup,trials,seed){return['suboptimal','decent','best','custom'].map(k=>simulate(setup,k,trials,seed))}
 export function rollScenario(setup,key,seed){const r=oneBattle(setup,key,seed,true);return{policy:POLICY[key].name,seed,win:r.win,turns:r.turns,trace:r.trace}}
+export function partyAt(levels,current){return scaleParty(levels,current)}
+export const POLICY_NAMES=Object.fromEntries(Object.entries(POLICY).map(([k,v])=>[k,v.name]));
 export const __test={rollDamage,stat,policyFor,planTurn,makeBattle,rng32,actionOrder,resolveActor};
